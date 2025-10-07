@@ -223,32 +223,14 @@ const KlarviaSectionUpdated = () => {
           </Card>
         </div>
 
-        {/* Conversation Area */}
-        <div className="bg-card border border-border rounded-lg p-6 mb-6 min-h-[150px] max-h-[300px] overflow-y-auto shadow-inner">
-          {conversation.length === 0 ? (
-            <p className="text-sm text-center text-muted-foreground italic">
-              {isActive 
-                ? "Listening... Start speaking to Klarvia"
-                : "Click Start to begin your conversation with Klarvia"}
-            </p>
-          ) : (
-            <div className="space-y-3">
-              {conversation.map((msg, idx) => (
-                <div key={idx} className={`flex ${msg.speaker === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[80%] px-4 py-2 rounded-lg ${
-                    msg.speaker === 'user' 
-                      ? 'bg-primary/10 text-foreground' 
-                      : 'bg-teal/10 text-foreground'
-                  }`}>
-                    <p className="text-xs font-semibold mb-1">
-                      {msg.speaker === 'user' ? 'You' : 'Klarvia'}
-                    </p>
-                    <p className="text-sm">{msg.text}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+        {/* Status Indicator */}
+        <div className="text-center mb-8">
+          <p className="text-sm text-muted-foreground">
+            {!isActive && "Click Start to begin your voice conversation with Klarvia"}
+            {isActive && !isUserSpeaking && !isKlarviaSpeaking && "Listening... Start speaking"}
+            {isUserSpeaking && "You're speaking..."}
+            {isKlarviaSpeaking && "Klarvia is responding..."}
+          </p>
         </div>
 
         {/* Controls */}
@@ -258,18 +240,16 @@ const KlarviaSectionUpdated = () => {
               size="lg"
               onClick={startConversation}
               disabled={!user}
-              className="bg-gradient-to-r from-teal to-primary hover:from-teal/90 hover:to-primary/90 text-primary-foreground transition-smooth px-10 py-5 text-sm shadow-lg hover:shadow-xl disabled:opacity-50"
+              className="bg-gradient-to-r from-teal to-primary hover:from-teal/90 hover:to-primary/90 text-primary-foreground transition-smooth px-12 py-6 text-base font-semibold shadow-lg hover:shadow-xl disabled:opacity-50"
             >
-              <Mic className="mr-2 h-4 w-4" />
-              {user ? 'Start Conversation' : 'Login to Start'}
+              Start
             </Button>
           ) : (
             <Button
               size="lg"
               onClick={stopConversation}
-              className="bg-gradient-to-r from-destructive to-destructive/80 hover:from-destructive/90 hover:to-destructive/70 text-destructive-foreground transition-smooth px-10 py-5 text-sm shadow-lg"
+              className="bg-gradient-to-r from-destructive to-destructive/80 hover:from-destructive/90 hover:to-destructive/70 text-destructive-foreground transition-smooth px-12 py-6 text-base font-semibold shadow-lg"
             >
-              <Square className="mr-2 h-4 w-4" />
               Stop
             </Button>
           )}

@@ -27,7 +27,9 @@ const Klarvia = () => {
       {/* Content */}
       <div className="relative z-10">
         <Navbar />
-        <div className="pt-20">
+        
+        {/* Meet Klarvia Section */}
+        <div className="pt-20 min-h-screen flex items-center">
           {!loading && !user ? (
             <div className="container mx-auto px-6 py-20 text-center">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -47,9 +49,10 @@ const Klarvia = () => {
           ) : (
             <KlarviaSectionUpdated />
           )}
+        </div>
         
         {/* How It Works Section */}
-        <section className="py-16 px-6 bg-muted/20">
+        <section className="py-20 px-6 bg-muted/30 border-t border-border">
           <div className="container mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-2xl md:text-4xl font-bold mb-3">
@@ -99,9 +102,10 @@ const Klarvia = () => {
             </div>
           </div>
         </section>
+        
+        {/* Footer Section */}
+        <Footer />
       </div>
-      </div>
-      <Footer />
     </div>
   );
 };
