@@ -9,28 +9,44 @@ const Klarvia = () => {
   const { user, loading } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-muted/10 to-background">
-      <Navbar />
-      <div className="pt-20">
-        {!loading && !user ? (
-          <div className="container mx-auto px-6 py-20 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Sign in to start your conversation with Klarvia
-            </h2>
-            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Create an account or log in to access your personal AI companion for workplace wellbeing.
-            </p>
-            <div className="flex gap-4 justify-center">
-              <Link to="/">
-                <Button size="lg" className="bg-primary hover:bg-primary/90">
-                  Get Started
-                </Button>
-              </Link>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Video Background */}
+      <div className="fixed inset-0 z-0">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover opacity-20"
+        >
+          <source src="/background-video.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background/80" />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10">
+        <Navbar />
+        <div className="pt-20">
+          {!loading && !user ? (
+            <div className="container mx-auto px-6 py-20 text-center">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Sign in to start your conversation with Klarvia
+              </h2>
+              <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
+                Create an account or log in to access your personal AI companion for workplace wellbeing.
+              </p>
+              <div className="flex gap-4 justify-center">
+                <Link to="/">
+                  <Button size="lg" className="bg-primary hover:bg-primary/90">
+                    Get Started
+                  </Button>
+                </Link>
+              </div>
             </div>
-          </div>
-        ) : (
-          <KlarviaSectionUpdated />
-        )}
+          ) : (
+            <KlarviaSectionUpdated />
+          )}
         
         {/* How It Works Section */}
         <section className="py-16 px-6 bg-muted/20">
@@ -83,6 +99,7 @@ const Klarvia = () => {
             </div>
           </div>
         </section>
+      </div>
       </div>
       <Footer />
     </div>
