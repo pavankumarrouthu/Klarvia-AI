@@ -1,13 +1,36 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import KlarviaSectionUpdated from "@/components/home/KlarviaSectionUpdated";
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Klarvia = () => {
+  const { user, loading } = useAuth();
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-muted/10 to-background">
       <Navbar />
       <div className="pt-20">
-        <KlarviaSectionUpdated />
+        {!loading && !user ? (
+          <div className="container mx-auto px-6 py-20 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Sign in to start your conversation with Klarvia
+            </h2>
+            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Create an account or log in to access your personal AI companion for workplace wellbeing.
+            </p>
+            <div className="flex gap-4 justify-center">
+              <Link to="/">
+                <Button size="lg" className="bg-primary hover:bg-primary/90">
+                  Get Started
+                </Button>
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <KlarviaSectionUpdated />
+        )}
         
         {/* How It Works Section */}
         <section className="py-16 px-6 bg-muted/20">
