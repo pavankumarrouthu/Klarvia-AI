@@ -152,16 +152,8 @@ const KlarviaSectionUpdated = () => {
   }, [isUserSpeaking, isKlarviaSpeaking]);
 
   return (
-    <section className="py-16 px-6 bg-gradient-to-b from-muted/20 via-background to-muted/20">
+    <section className="py-8">
       <div className="container mx-auto max-w-6xl">
-        <div className="text-center mb-12">
-          <h2 className="text-2xl md:text-4xl font-bold mb-3 bg-gradient-to-r from-primary to-teal bg-clip-text text-transparent">
-            Meet Klarvia
-          </h2>
-          <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
-            Have a natural voice conversation with Klarvia, your AI companion for workplace wellbeing
-          </p>
-        </div>
 
         <div className="grid md:grid-cols-2 gap-6 mb-8">
           {/* Klarvia Card */}

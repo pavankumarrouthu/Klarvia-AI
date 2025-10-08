@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import logo from "@/assets/klarvia-logo.png";
@@ -14,6 +14,14 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user } = useAuth();
   const location = useLocation();
+
+  // Check URL parameters to auto-open login modal
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('showLogin') === 'true') {
+      setIsLoginOpen(true);
+    }
+  }, [location]);
 
   const handleSwitchToSignup = () => {
     setIsLoginOpen(false);
