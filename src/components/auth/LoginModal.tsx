@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
 import { useAuth } from '@/contexts/AuthContext';
+const API_BASE = (import.meta.env.VITE_API_BASE ?? 'http://localhost:5000');
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -100,6 +101,7 @@ const LoginModal = ({ isOpen, onClose, onSwitchToSignup }: LoginModalProps) => {
                 type="button" 
                 variant="outline" 
                 className="w-full h-11"
+                onClick={() => { window.location.href = 'http://localhost:5000/auth/google/start'; }}
               >
                 Sign in with Google
               </Button>

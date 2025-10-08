@@ -108,7 +108,15 @@ router.get('/:table', async (req, res) => {
     if (Number.isNaN(n) || n <= 0) n = 50;
     if (n > 500) n = 500; // clamp
     const result = await pool.query(`SELECT * FROM "${table}" LIMIT $1`, [n]);
-    res.json({ table, count: result.rows.length, rows: result.rows, limit: n });
+    const sensitive = new Set(['password', 'password_hash', 'secret', 'token', 'api_key', 'apikey']);
+    const rows = result.rows.map(r => {
+      const copy = { ...r };
+      for (const k of Object.keys(copy)) {
+        if (sensitive.has(k.toLowerCase())) copy[k] = '***REDACTED***';
+      }
+      return copy;
+    });
+    res.json({ table, count: rows.length, rows, limit: n });
   } catch (err) {
     console.error('View rows error', err);
     res.status(err.status || 500).json({ error: err.message || 'Failed to fetch rows' });

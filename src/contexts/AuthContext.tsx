@@ -24,8 +24,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Base URL for API (defaults to local dev API)
-    const API_BASE = (import.meta.env.VITE_API_BASE ?? '') || 'http://localhost:8080';
+  // Base URL for API (defaults to backend dev API on port 5000)
+  const API_BASE = (import.meta.env.VITE_API_BASE ?? '') || 'http://localhost:5000';
 
     // Check current session/user from our backend
     fetch(API_BASE + '/auth/me', {
@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const signup = async (email: string, password: string) => {
-    const API_BASE = (import.meta.env.VITE_API_BASE ?? '') || 'http://localhost:8080';
+  const API_BASE = (import.meta.env.VITE_API_BASE ?? '') || 'http://localhost:5000';
     const res = await fetch(API_BASE + '/auth/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const login = async (email: string, password: string) => {
-    const API_BASE = (import.meta.env.VITE_API_BASE ?? '') || 'http://localhost:8080';
+  const API_BASE = (import.meta.env.VITE_API_BASE ?? '') || 'http://localhost:5000';
     const res = await fetch(API_BASE + '/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
