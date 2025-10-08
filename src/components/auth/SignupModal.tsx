@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useState } from "react";
+import { useAuth } from '@/contexts/AuthContext';
 
 interface SignupModalProps {
   isOpen: boolean;
@@ -17,14 +18,32 @@ interface SignupModalProps {
 }
 
 const SignupModal = ({ isOpen, onClose, onSwitchToLogin }: SignupModalProps) => {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [retypePassword, setRetypePassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { signup } = useAuth();
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     if (password !== retypePassword) {
-      alert("Passwords don't match!");
+      setError("Passwords don't match!");
       return;
+    }
+    try {
+      // For signup we need an email input; grab it from DOM briefly
+      if (!email) {
+        setError('Please enter an email');
+        return;
+      }
+  await signup(email.trim(), password);
+  // After successful signup, close this modal and open login
+  onClose();
+  onSwitchToLogin();
+    } catch (err: any) {
+      setError(err?.message ?? 'Signup failed');
     }
   };
 
@@ -59,6 +78,8 @@ const SignupModal = ({ isOpen, onClose, onSwitchToLogin }: SignupModalProps) => 
                   id="signup-email"
                   type="email"
                   placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="h-11"
                   required
                 />
@@ -90,6 +111,7 @@ const SignupModal = ({ isOpen, onClose, onSwitchToLogin }: SignupModalProps) => 
                 />
               </div>
 
+              {error && <div className="text-sm text-red-600">{error}</div>}
               <Button
                 type="submit"
                 className="w-full h-11 bg-[#D4A574] hover:bg-[#C39563] text-white font-medium"

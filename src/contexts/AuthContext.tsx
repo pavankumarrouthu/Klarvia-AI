@@ -1,9 +1,10 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import type { User } from '@supabase/supabase-js';
+
+// Minimal User shape used in this app
+type User = { id: string; email: string } | null;
 
 interface AuthContextType {
-  user: User | null;
+  user: User;
   loading: boolean;
   signup: (email: string, password: string) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
@@ -19,45 +20,71 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    // Base URL for API (defaults to local dev API)
+    const API_BASE = (import.meta.env.VITE_API_BASE ?? '') || 'http://localhost:8080';
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    // Check current session/user from our backend
+    fetch(API_BASE + '/auth/me', {
+      method: 'GET',
+      credentials: 'include',
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        setUser(data.user ?? null);
+        setLoading(false);
+      })
+      .catch(() => {
+        setUser(null);
+        setLoading(false);
+      });
 
-    return () => subscription.unsubscribe();
+    // No realtime auth state from backend; rely on app actions to update state
+    return () => {};
   }, []);
 
   const signup = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/`
-      }
+    const API_BASE = (import.meta.env.VITE_API_BASE ?? '') || 'http://localhost:8080';
+    const res = await fetch(API_BASE + '/auth/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+      credentials: 'include',
     });
-    if (error) throw error;
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body?.error ?? 'Signup failed');
+    }
+    // Do not auto-set user; backend requires explicit login now
+    await res.json();
   };
 
   const login = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+    const API_BASE = (import.meta.env.VITE_API_BASE ?? '') || 'http://localhost:8080';
+    const res = await fetch(API_BASE + '/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+      credentials: 'include',
     });
-    if (error) throw error;
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body?.error ?? 'Login failed');
+    }
+    const body = await res.json();
+    setUser(body.user ?? null);
   };
 
   const logout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
+    const API_BASE = (import.meta.env.VITE_API_BASE ?? '') || 'http://localhost:8080';
+    await fetch(API_BASE + '/auth/logout', {
+      method: 'POST',
+      credentials: 'include',
+    });
+    setUser(null);
   };
 
   return (

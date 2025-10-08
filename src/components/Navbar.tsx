@@ -63,6 +63,16 @@ const Navbar = () => {
               >
                 Klarvia
               </Link>
+              {import.meta.env.DEV && (
+                <Link 
+                  to="/inspect-db" 
+                  className={`text-sm font-medium transition-smooth hover:text-primary ${
+                    isActive('/inspect-db') ? 'text-primary' : 'text-foreground'
+                  }`}
+                >
+                  Inspect DB
+                </Link>
+              )}
               
               {user ? (
                 <ProfileMenu />

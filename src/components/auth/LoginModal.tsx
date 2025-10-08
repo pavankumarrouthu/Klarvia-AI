@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
+import { useAuth } from '@/contexts/AuthContext';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -15,9 +16,18 @@ const LoginModal = ({ isOpen, onClose, onSwitchToSignup }: LoginModalProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { login } = useAuth();
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login submitted:", { email, password });
+    setError(null);
+    try {
+      await login(email, password);
+      onClose();
+    } catch (err: any) {
+      setError(err?.message ?? 'Login failed');
+    }
   };
 
   return (
@@ -72,6 +82,7 @@ const LoginModal = ({ isOpen, onClose, onSwitchToSignup }: LoginModalProps) => {
                 </Button>
               </div>
 
+              {error && <div className="text-sm text-red-600">{error}</div>}
               <Button type="submit" className="w-full h-11 bg-[#D4A574] hover:bg-[#C39563] text-white font-medium">
                 SIGN IN
               </Button>
