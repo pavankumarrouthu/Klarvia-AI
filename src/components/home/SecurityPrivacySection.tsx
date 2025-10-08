@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import securityImage from "@/assets/security-privacy.jpg";
+import { Lock, Users, Award } from "lucide-react";
 
 const SecurityPrivacySection = () => {
   return (
@@ -16,14 +16,10 @@ const SecurityPrivacySection = () => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 mb-12">
-          <Card className="p-8 bg-gradient-to-br from-primary/5 via-primary/10 to-teal/5 border-primary/20 hover:border-primary/40 transition-smooth shadow-card hover:shadow-lg">
+          <Card className="p-8 bg-card border-border hover:border-primary/40 transition-smooth shadow-card hover:shadow-lg">
             <div className="flex flex-col items-center text-center space-y-4">
-              <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary to-teal p-1 overflow-hidden">
-                <img 
-                  src={securityImage} 
-                  alt="Data Encryption" 
-                  className="w-full h-full object-cover rounded-2xl"
-                />
+              <div className="w-16 h-16 rounded-full bg-orange-500/10 flex items-center justify-center">
+                <Lock className="w-8 h-8 text-orange-500" />
               </div>
               <h3 className="text-xl font-semibold">Unbreakable Data Encryption</h3>
               <p className="text-sm text-muted-foreground">
@@ -33,14 +29,10 @@ const SecurityPrivacySection = () => {
             </div>
           </Card>
 
-          <Card className="p-8 bg-gradient-to-br from-teal/5 via-accent/10 to-primary/5 border-teal/20 hover:border-teal/40 transition-smooth shadow-card hover:shadow-lg">
+          <Card className="p-8 bg-card border-border hover:border-primary/40 transition-smooth shadow-card hover:shadow-lg">
             <div className="flex flex-col items-center text-center space-y-4">
-              <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-teal to-accent p-1 overflow-hidden">
-                <img 
-                  src={securityImage} 
-                  alt="Privacy Protection" 
-                  className="w-full h-full object-cover rounded-2xl"
-                />
+              <div className="w-16 h-16 rounded-full bg-purple-500/10 flex items-center justify-center">
+                <Users className="w-8 h-8 text-purple-500" />
               </div>
               <h3 className="text-xl font-semibold">Privacy at Every Step</h3>
               <p className="text-sm text-muted-foreground">
@@ -50,14 +42,10 @@ const SecurityPrivacySection = () => {
             </div>
           </Card>
 
-          <Card className="p-8 bg-gradient-to-br from-accent/5 via-teal/10 to-primary/5 border-accent/20 hover:border-accent/40 transition-smooth shadow-card hover:shadow-lg">
+          <Card className="p-8 bg-card border-border hover:border-primary/40 transition-smooth shadow-card hover:shadow-lg">
             <div className="flex flex-col items-center text-center space-y-4">
-              <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-accent to-primary p-1 overflow-hidden">
-                <img 
-                  src={securityImage} 
-                  alt="Security Certification" 
-                  className="w-full h-full object-cover rounded-2xl"
-                />
+              <div className="w-16 h-16 rounded-full bg-blue-500/10 flex items-center justify-center">
+                <Award className="w-8 h-8 text-blue-500" />
               </div>
               <h3 className="text-xl font-semibold">Certification You Can Count On</h3>
               <p className="text-sm text-muted-foreground">
