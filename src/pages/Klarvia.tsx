@@ -1,17 +1,19 @@
+"use client";
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import KlarviaSectionUpdated from "@/components/home/KlarviaSectionUpdated";
-import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import VoiceInterface from "@/components/home/VoiceInterface"; // ✅ Import your voice interface
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
-const Klarvia = () => {
+export default function Klarvia() {
   const { user, loading } = useAuth();
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Video Background */}
+      {/* 🔹 Background Video */}
       <div className="fixed inset-0 z-0">
         <video
           autoPlay
@@ -25,16 +27,16 @@ const Klarvia = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background/80" />
       </div>
 
-      {/* Content */}
+      {/* 🔹 Content */}
       <div className="relative z-10 flex flex-col min-h-screen">
         <Navbar />
 
-        {/* Meet Klarvia Section - Centered */}
+        {/* 🔹 Meet Klarvia Section */}
         <div className="flex-grow flex items-center justify-center">
           {!loading && !user ? (
             <div className="text-center max-w-4xl mx-auto px-6 py-10">
               <motion.h2
-                className="text-4xl md:text-5xl font-bold mb-6 text-primary"
+                className="text-5xl md:text-6xl font-bold mb-6 text-primary"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
@@ -48,79 +50,97 @@ const Klarvia = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
               >
-                Have a natural voice conversation with Klarvia, your AI companion for workplace wellbeing.
+                Have a natural voice conversation with Klarvia — your AI
+                companion for workplace wellbeing.
               </motion.p>
 
-              {/* Two Cards */}
+              {/* 🔹 Two Cards (User + AI) */}
               <div className="flex flex-col md:flex-row items-center justify-center gap-10 mb-10">
-                {/* AI Card */}
+                {/* User Voice Card */}
                 <motion.div
-                  className="w-72 h-72 bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg border border-gray-200 flex flex-col items-center justify-center space-y-4"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  whileHover={{ scale: 1.03 }}
+                  className="w-80 h-80 bg-indigo-50 border border-indigo-200 rounded-2xl shadow-lg p-6 flex flex-col items-center justify-center space-y-4"
                 >
-                  <img
-                    src="/ai-avatar.png"
-                    alt="Klarvia"
-                    className="w-28 h-28 rounded-full border-4 border-primary/30"
-                  />
-                  <h3 className="text-2xl font-semibold text-primary">Klarvia</h3>
-                  <p className="text-gray-500 text-base">Listening...</p>
-                </motion.div>
-
-                {/* User Card */}
-                <motion.div
-                  className="w-72 h-72 bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg border border-gray-200 flex flex-col items-center justify-center space-y-4"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
-                >
-                  <div className="w-28 h-28 rounded-full bg-primary/10 flex items-center justify-center">
+                  <div className="bg-indigo-600 text-white w-20 h-20 rounded-full flex items-center justify-center shadow-md">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="currentColor"
-                      className="w-12 h-12 text-primary"
+                      className="w-10 h-10"
                     >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        d="M15.75 7.5V9A3.75 3.75 0 0112 12.75H9.75A3.75 3.75 0 016 9V7.5M12 12.75V21M12 21a4.5 4.5 0 004.5-4.5H7.5A4.5 4.5 0 0012 21z"
+                        d="M12 18.75a6.75 6.75 0 006.75-6.75M5.25 12A6.75 6.75 0 0112 5.25M12 18.75V21m0-15.75V3"
                       />
                     </svg>
                   </div>
-                  <h3 className="text-2xl font-semibold text-primary">You</h3>
-                  <p className="text-gray-500 text-base">Ready</p>
+                  <h3 className="text-2xl font-semibold text-indigo-700">
+                    Your Voice
+                  </h3>
+                  <p className="text-gray-500 text-base">
+                    Tap the mic below to start speaking
+                  </p>
+                </motion.div>
+
+                {/* AI Voice Card */}
+                <motion.div
+                  whileHover={{ scale: 1.03 }}
+                  className="w-80 h-80 bg-gray-50 border border-gray-200 rounded-2xl shadow-lg p-6 flex flex-col items-center justify-center space-y-4"
+                >
+                  <div className="bg-gray-400 text-white w-20 h-20 rounded-full flex items-center justify-center shadow-md">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-10 h-10"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 9l10.5 3L9 15V9z"
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="text-2xl font-semibold text-gray-700">
+                    Klarvia’s Response
+                  </h3>
+                  <p className="text-gray-500 text-base">
+                    Klarvia will respond here soon.
+                  </p>
                 </motion.div>
               </div>
 
-              {/* Start Button */}
-              <Link to="/">
-                <Button
-                  size="lg"
-                  className="px-10 py-5 text-lg bg-primary hover:bg-primary/90 rounded-full shadow-lg"
-                >
-                  Start
-                </Button>
-              </Link>
+              {/* 🔹 Start Button + Modal Trigger */}
+              <div className="flex flex-col items-center space-y-6">
+                <Link to="/">
+                  <Button
+                    size="lg"
+                    className="px-10 py-5 text-lg bg-primary hover:bg-primary/90 rounded-full shadow-lg"
+                  >
+                    Start
+                  </Button>
+                </Link>
 
-              <p className="text-sm text-gray-500 mt-6">
-                Click Start to begin your voice conversation with Klarvia.
-              </p>
+                <p className="text-sm text-gray-500">
+                  Click Start to begin your voice conversation with Klarvia.
+                </p>
+              </div>
             </div>
           ) : (
-            <KlarviaSectionUpdated />
+            <div className="flex flex-col items-center justify-center h-full">
+              {/* 🔹 Integrated Voice Interface Modal */}
+              <VoiceInterface />
+            </div>
           )}
         </div>
 
-        {/* Footer */}
         <Footer />
       </div>
     </div>
   );
-};
-
-export default Klarvia;
+}
