@@ -1,154 +1,81 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import KlarviaSectionUpdated from "@/components/home/KlarviaSectionUpdated";
-import { useAuth } from "@/contexts/AuthContext";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+"use client";
+
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
-const Klarvia = () => {
-  const { user, loading } = useAuth();
-
+export default function Klarvia() {
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Video Background */}
-      <div className="fixed inset-0 z-0">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover opacity-20"
+    <section className="min-h-[calc(100vh-80px)] flex items-center justify-center py-16 px-6 bg-gradient-to-b from-indigo-50 to-white">
+      <div className="container mx-auto text-center flex flex-col items-center justify-center space-y-8">
+        {/* Header */}
+        <motion.h2
+          className="text-3xl md:text-5xl font-bold text-indigo-700 mb-2"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          <source src="/background-video.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background/80" />
-      </div>
+          Meet Klarvia
+        </motion.h2>
 
-      {/* Content */}
-      <div className="relative z-10">
-        <Navbar />
-        
-        {/* Meet Klarvia Section */}
-        <div className="pt-20 min-h-screen flex items-center">
-          {!loading && !user ? (
-            <div className="container mx-auto px-6 py-20 text-center">
-              <motion.h2
-                className="text-3xl md:text-4xl font-bold mb-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
+        <motion.p
+          className="text-gray-600 mb-6 max-w-2xl mx-auto text-lg"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
+        >
+          Have a natural voice conversation with Klarvia, your AI companion for
+          workplace wellbeing.
+        </motion.p>
+
+        {/* Two Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+          {/* Klarvia Card */}
+          <motion.div
+            whileHover={{ scale: 1.03 }}
+            transition={{ type: "spring", stiffness: 200 }}
+            className="bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-indigo-100 flex flex-col items-center justify-center"
+          >
+            <img
+              src="/ai-avatar.png"
+              alt="Klarvia"
+              className="w-20 h-20 rounded-full mb-4"
+            />
+            <h3 className="text-xl font-semibold text-indigo-700">Klarvia</h3>
+            <p className="text-gray-500 text-sm mt-2">Listening...</p>
+          </motion.div>
+
+          {/* User Card */}
+          <motion.div
+            whileHover={{ scale: 1.03 }}
+            transition={{ type: "spring", stiffness: 200 }}
+            className="bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-gray-100 flex flex-col items-center justify-center"
+          >
+            <div className="w-20 h-20 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="#6b21a8"
+                className="w-10 h-10"
               >
-                Sign in to start your conversation with Klarvia
-              </motion.h2>
-              <motion.p
-                className="text-muted-foreground mb-8 max-w-2xl mx-auto"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
-              >
-                Create an account or log in to access your personal AI companion for workplace wellbeing.
-              </motion.p>
-              <div className="flex gap-4 justify-center">
-                <Link to="/">
-                  <Button size="lg" className="bg-primary hover:bg-primary/90">
-                    Get Started
-                  </Button>
-                </Link>
-              </div>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.75 7.5V9A3.75 3.75 0 0112 12.75H9.75A3.75 3.75 0 016 9V7.5M12 12.75V21M12 21a4.5 4.5 0 004.5-4.5H7.5A4.5 4.5 0 0012 21z"
+                />
+              </svg>
             </div>
-          ) : (
-            <KlarviaSectionUpdated />
-          )}
+            <h3 className="text-xl font-semibold text-indigo-700">You</h3>
+            <p className="text-gray-500 text-sm mt-2">Ready</p>
+          </motion.div>
         </div>
-        
-        {/* How It Works Section */}
-        <section className="py-20 px-6 bg-muted/30 border-t border-border">
-          <div className="container mx-auto">
-            <div className="text-center mb-12">
-              <motion.h2
-                className="text-2xl md:text-4xl font-bold mb-3"
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.6 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-              >
-                How It Works
-              </motion.h2>
-              <motion.p
-                className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto"
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.6 }}
-                transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
-              >
-                Simple steps to get started with Klarvia and improve your workplace wellbeing
-              </motion.p>
-            </div>
-            
-            <div className="max-w-4xl mx-auto space-y-10">
-              <motion.div
-                className="flex gap-5 items-start"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.6 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-              >
-                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-lg font-bold">
-                  1
-                </div>
-                <div>
-                  <motion.h3 className="text-lg font-semibold mb-2" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: 0.1 }}>Start a Conversation</motion.h3>
-                  <motion.p className="text-sm text-muted-foreground" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: 0.2 }}>
-                    Simply speak to Klarvia about what's on your mind. No typing, no forms - just natural conversation.
-                  </motion.p>
-                </div>
-              </motion.div>
-              
-              <motion.div
-                className="flex gap-5 items-start"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.6 }}
-                transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-              >
-                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-lg font-bold">
-                  2
-                </div>
-                <div>
-                  <motion.h3 className="text-lg font-semibold mb-2" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: 0.1 }}>Get Personalized Support</motion.h3>
-                  <motion.p className="text-sm text-muted-foreground" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: 0.2 }}>
-                    Klarvia listens without judgment, helps you process emotions, and provides tailored insights based on your unique work situation.
-                  </motion.p>
-                </div>
-              </motion.div>
-              
-              <motion.div
-                className="flex gap-5 items-start"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.6 }}
-                transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-              >
-                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-lg font-bold">
-                  3
-                </div>
-                <div>
-                  <motion.h3 className="text-lg font-semibold mb-2" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: 0.1 }}>Track Your Progress</motion.h3>
-                  <motion.p className="text-sm text-muted-foreground" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: 0.2 }}>
-                    View your wellbeing trends, stress patterns, and see how you're improving over time with actionable insights.
-                  </motion.p>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </section>
-        
-        {/* Footer Section */}
-        <Footer />
-      </div>
-    </div>
-  );
-};
 
-export default Klarvia;
+        {/* Start Button */}
+        <Button className="mt-10 px-8 py-3 text-lg bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-xl transition-all">
+          Start
+        </Button>
+      </div>
+    </section>
+  );
+}
