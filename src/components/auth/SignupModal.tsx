@@ -9,6 +9,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/components/ui/use-toast";
 
 interface SignupModalProps {
   isOpen: boolean;
@@ -19,12 +21,67 @@ interface SignupModalProps {
 const SignupModal = ({ isOpen, onClose, onSwitchToLogin }: SignupModalProps) => {
   const [password, setPassword] = useState("");
   const [retypePassword, setRetypePassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { signup } = useAuth();
+  const { toast } = useToast();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== retypePassword) {
-      alert("Passwords don't match!");
+    
+    // Basic validation
+    if (!name.trim() || !email.trim() || !password || !retypePassword) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill in all fields.",
+        variant: "destructive",
+      });
       return;
+    }
+
+    if (password.length < 6) {
+      toast({
+        title: "Validation Error",
+        description: "Password must be at least 6 characters long.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (password !== retypePassword) {
+      toast({
+        title: "Validation Error",
+        description: "Passwords don't match!",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await signup(email.trim(), password, name.trim());
+      toast({
+        title: "Success",
+        description: "Your account has been created successfully. You are now logged in.",
+      });
+      // Clear form and close modal
+      setName("");
+      setEmail("");
+      setPassword("");
+      setRetypePassword("");
+      onClose();
+    } catch (err: any) {
+      const errorMsg = err?.message || 'An unexpected error occurred.';
+      toast({
+        title: "Signup Failed",
+        description: errorMsg.includes('already registered') 
+          ? 'This email is already registered. Please try logging in instead.'
+          : errorMsg,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -41,7 +98,7 @@ const SignupModal = ({ isOpen, onClose, onSwitchToLogin }: SignupModalProps) => 
               </DialogDescription>
             </DialogHeader>
             
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSignup} className="space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="signup-name" className="text-sm font-medium">Full name</Label>
                 <Input
@@ -49,7 +106,10 @@ const SignupModal = ({ isOpen, onClose, onSwitchToLogin }: SignupModalProps) => 
                   type="text"
                   placeholder="Enter your name"
                   className="h-11"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   required
+                  autoComplete="name"
                 />
               </div>
 
@@ -60,7 +120,10 @@ const SignupModal = ({ isOpen, onClose, onSwitchToLogin }: SignupModalProps) => 
                   type="email"
                   placeholder="Enter your email"
                   className="h-11"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
+                  autoComplete="email"
                 />
               </div>
 
@@ -69,12 +132,17 @@ const SignupModal = ({ isOpen, onClose, onSwitchToLogin }: SignupModalProps) => 
                 <Input
                   id="signup-password"
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder="Enter your password (min. 6 characters)"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="h-11"
                   required
+                  minLength={6}
+                  autoComplete="new-password"
                 />
+                {password && password.length < 6 && (
+                  <p className="text-xs text-muted-foreground">Password must be at least 6 characters</p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -87,14 +155,20 @@ const SignupModal = ({ isOpen, onClose, onSwitchToLogin }: SignupModalProps) => 
                   onChange={(e) => setRetypePassword(e.target.value)}
                   className="h-11"
                   required
+                  minLength={6}
+                  autoComplete="new-password"
                 />
+                {retypePassword && password !== retypePassword && (
+                  <p className="text-xs text-destructive">Passwords do not match</p>
+                )}
               </div>
 
               <Button
                 type="submit"
                 className="w-full h-11 bg-[#D4A574] hover:bg-[#C39563] text-white font-medium"
+                disabled={loading}
               >
-                CREATE ACCOUNT
+                {loading ? 'Creating...' : 'CREATE ACCOUNT'}
               </Button>
 
               <div className="relative my-6">

@@ -7,6 +7,8 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import Klarvia from "./pages/Klarvia";
 import NotFound from "./pages/NotFound";
+import { ResetPasswordPage } from "./pages/ResetPasswordPage";
+import { DatabaseInspectorPage } from "./pages/DatabaseInspectorPage";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +22,8 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/klarvia" element={<Klarvia />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/inspect-db" element={<DatabaseInspectorPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
