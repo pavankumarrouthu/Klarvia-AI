@@ -3,16 +3,21 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import VoiceInterface from "@/components/home/VoiceInterface"; // ✅ Import your voice interface
+import VoiceInterface from "@/components/home/VoiceInterface";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useState } from "react";
 
 export default function Klarvia() {
   const { user, loading } = useAuth();
+  const [showVoiceInterface, setShowVoiceInterface] = useState(false);
+
+  const handleStart = () => {
+    setShowVoiceInterface(true);
+  };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div className="min-h-screen relative overflow-hidden flex flex-col">
       {/* 🔹 Background Video */}
       <div className="fixed inset-0 z-0">
         <video
@@ -27,39 +32,45 @@ export default function Klarvia() {
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background/80" />
       </div>
 
-      {/* 🔹 Content */}
+      {/* 🔹 Foreground Content */}
       <div className="relative z-10 flex flex-col min-h-screen">
         <Navbar />
 
-        {/* 🔹 Meet Klarvia Section */}
-        <div className="flex-grow flex items-center justify-center">
-          {!loading && !user ? (
-            <div className="text-center max-w-4xl mx-auto px-6 py-10">
+        <div className="flex-grow flex items-center justify-center px-4">
+          {!loading && !showVoiceInterface ? (
+            <div className="text-center max-w-5xl mx-auto px-6 py-12">
+              {/* Title */}
               <motion.h2
                 className="text-5xl md:text-6xl font-bold mb-6 text-primary"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
+                transition={{ duration: 0.6 }}
               >
                 Meet Klarvia
               </motion.h2>
 
+              {/* Subtitle */}
               <motion.p
                 className="text-muted-foreground mb-10 max-w-2xl mx-auto text-lg md:text-xl"
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
+                transition={{ duration: 0.6, delay: 0.15 }}
               >
                 Have a natural voice conversation with Klarvia — your AI
                 companion for workplace wellbeing.
               </motion.p>
 
-              {/* 🔹 Two Cards (User + AI) */}
-              <div className="flex flex-col md:flex-row items-center justify-center gap-10 mb-10">
-                {/* User Voice Card */}
+              {/* Cards Container */}
+              <motion.div
+                className="flex flex-col md:flex-row items-center justify-center gap-10 mb-12"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                {/* User Card */}
                 <motion.div
-                  whileHover={{ scale: 1.03 }}
-                  className="w-80 h-80 bg-indigo-50 border border-indigo-200 rounded-2xl shadow-lg p-6 flex flex-col items-center justify-center space-y-4"
+                  whileHover={{ scale: 1.05 }}
+                  className="w-80 h-80 bg-indigo-50 border border-indigo-200 rounded-2xl shadow-xl p-6 flex flex-col items-center justify-center space-y-4"
                 >
                   <div className="bg-indigo-600 text-white w-20 h-20 rounded-full flex items-center justify-center shadow-md">
                     <svg
@@ -81,14 +92,14 @@ export default function Klarvia() {
                     Your Voice
                   </h3>
                   <p className="text-gray-500 text-base">
-                    Tap the mic below to start speaking
+                    Tap the mic to start speaking
                   </p>
                 </motion.div>
 
-                {/* AI Voice Card */}
+                {/* AI Card */}
                 <motion.div
-                  whileHover={{ scale: 1.03 }}
-                  className="w-80 h-80 bg-gray-50 border border-gray-200 rounded-2xl shadow-lg p-6 flex flex-col items-center justify-center space-y-4"
+                  whileHover={{ scale: 1.05 }}
+                  className="w-80 h-80 bg-gray-50 border border-gray-200 rounded-2xl shadow-xl p-6 flex flex-col items-center justify-center space-y-4"
                 >
                   <div className="bg-gray-400 text-white w-20 h-20 rounded-full flex items-center justify-center shadow-md">
                     <svg
@@ -110,30 +121,28 @@ export default function Klarvia() {
                     Klarvia’s Response
                   </h3>
                   <p className="text-gray-500 text-base">
-                    Klarvia will respond here soon.
+                    Klarvia will respond right after you speak.
                   </p>
                 </motion.div>
-              </div>
+              </motion.div>
 
-              {/* 🔹 Start Button + Modal Trigger */}
-              <div className="flex flex-col items-center space-y-6">
-                <Link to="/">
-                  <Button
-                    size="lg"
-                    className="px-10 py-5 text-lg bg-primary hover:bg-primary/90 rounded-full shadow-lg"
-                  >
-                    Start
-                  </Button>
-                </Link>
-
+              {/* Start Button */}
+              <div className="flex flex-col items-center space-y-4">
+                <Button
+                  onClick={handleStart}
+                  size="lg"
+                  className="px-10 py-5 text-lg bg-primary hover:bg-primary/90 rounded-full shadow-lg"
+                >
+                  Start Conversation
+                </Button>
                 <p className="text-sm text-gray-500">
-                  Click Start to begin your voice conversation with Klarvia.
+                  Click Start to open Klarvia’s voice interface.
                 </p>
               </div>
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center h-full">
-              {/* 🔹 Integrated Voice Interface Modal */}
+            <div className="w-full flex items-center justify-center">
+              {/* 🧠 Integrated Voice Interface (centered modal) */}
               <VoiceInterface />
             </div>
           )}
