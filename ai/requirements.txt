@@ -1,0 +1,7 @@
+fastapi
+uvicorn[standard]
+pydantic
+# Optional backends (enable as needed)
+# transformers
+# torch
+# unsloth

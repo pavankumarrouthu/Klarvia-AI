@@ -62,29 +62,24 @@ export default function VoiceInterface() {
     }
   };
 
-  // 🤖 AI Response Logic (Backend Placeholder)
+  // 🤖 AI Response Logic (calls backend /api/chat)
   const handleAIResponse = async (text: string) => {
     setIsThinking(true);
 
     try {
-      // 🧩 Placeholder for backend API call
-      // const res = await fetch("/api/voice-ai", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ message: text }),
-      // });
-      // const data = await res.json();
-      // const response = data.reply;
+      console.log("[voice] sending to model...", text);
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+      const data = await res.json().catch(() => ({}));
+      const response = (data && (data.reply || data.message)) || "Sorry, I couldn't process that.";
 
-      // For now, simulate backend response
-      const response = "Hello, I'm Klarvia.";
-
-      // ⏳ Add delay for realism
-      setTimeout(() => {
-        setAiResponse(response);
-        speakResponse(response);
-        setIsThinking(false);
-      }, 1000);
+      setAiResponse(response);
+      console.log("[voice] reply:", response);
+      speakResponse(response);
+      setIsThinking(false);
     } catch (error) {
       console.error("AI response error:", error);
       setAiResponse("Sorry, I couldn’t process that.");
