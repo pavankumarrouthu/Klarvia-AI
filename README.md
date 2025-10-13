@@ -1,57 +1,63 @@
 # Klarvia-AI
 
-Vite + React + TypeScript + shadcn-ui + Tailwind CSS, with a minimal Node/Express backend for Postgres.
+Vite + React + TypeScript + shadcn-ui + Tailwind CSS, with a Node/Express backend for Postgres.
 
+This repo now includes a small Python FastAPI microservice for the AI chatbot model to enable voice → model → voice.
 
+## Run the stack locally
 
-## Frontend (Vite)
-
-- Dev server runs on http://localhost:8080
-- Dev proxy forwards `/api` to `http://localhost:4000`
+Backend (Node/Express) — requires Node.js 18+ (native fetch used):
 
 ```powershell
-npm install --legacy-peer-deps
+npm --prefix .\server install
+npm --prefix .\server run dev
+```
+
+Frontend (Vite):
+
+```powershell
+npm install
 npm run dev
 ```
 
-## Tech stack
-
-- Vite, React, TypeScript, shadcn-ui, Tailwind CSS
-- Node/Express, pg, bcrypt, jsonwebtoken
-
-## Database connectivity (Render Postgres)
-
-The backend ships with a small DB connectivity check and migrations. To verify your Render Postgres (or any PostgreSQL) connection from the project, set the following environment variables and run the check script from the `server/` folder.
-
-- Required env vars:
-	- `DATABASE_URL` — the full Postgres connection string (do NOT commit this to source control)
-	- `DATABASE_SSL` — set to `true` when connecting to hosted Postgres services that require SSL (for example, Render)
-
-Example (PowerShell):
+AI microservice (FastAPI) — optional; powers the `/chat` endpoint:
 
 ```powershell
-$env:DATABASE_URL = 'postgres://username:password@db-host:5432/dbname'
-$env:DATABASE_SSL = 'true'
-npm --prefix server run check-db
+# Create/activate a Python env first (recommended)
+python -m venv .venv; .\.venv\Scripts\Activate.ps1
+pip install -r .\ai\requirements.txt
+
+# Optionally configure model env (see ai/model.py)
+# $env:MODEL_IMPL = "transformers"; $env:MODEL_NAME = "sshleifer/tiny-gpt2"
+
+python -m uvicorn ai.server:app --reload --host 127.0.0.1 --port 8001
 ```
 
-Expected successful output:
+The frontend proxies `/api/*` to Node on port 4000. We also add a new route `/api/chat` that forwards to the Python service at http://127.0.0.1:8001/chat.
 
-- "DB connection OK"
-- `server_time:` (server reported time)
-- `version:` (Postgres server version)
+## Voice diagnostics
 
-Common failure and how to interpret it:
+Open your app at http://localhost:8080 and in the devtools console run:
 
-- Error: `getaddrinfo ENOTFOUND base`
-	- This means the hostname portion of your `DATABASE_URL` could not be resolved. Often this happens when `DATABASE_URL` is missing, malformed, or contains a placeholder value like `base` from some templated string.
-	- Solution: Verify `DATABASE_URL` is a valid URL. Example valid URL:
-		- `postgres://user:pass@db.xxx.render.com:5432/dbname` (hostname should be a resolvable DNS name or IP)
+```js
+await (await fetch('/voice_test.js')).text().then(eval)
+```
 
-- Error: SSL or certificate issues
-	- If you see certificate validation errors, ensure `DATABASE_SSL` is set to `true` for hosted Postgres providers that require SSL. The backend uses `rejectUnauthorized: false` when `DATABASE_SSL=true` so it will accept the server certificate in typical managed Postgres setups.
+This script checks SpeechRecognition, speechSynthesis, mic permissions, and hits `/api/chat` with "Hello".
 
-If you want me to run the DB-check here, please set `DATABASE_URL` in your environment (or paste a sanitized host part) and confirm you'd like me to proceed. I will NOT ask you to paste secrets; a sanitized host (for debugging) or setting the env locally is sufficient.
+You can also open the floating mic button in the UI (bottom-right) to try a full voice interaction. Watch the browser console for lines prefixed with `[voice]`.
 
+## Configure models
 
-# be -- npm --prefix D:\office-work\Klarvia-AI\server run dev
+The AI service tries these strategies (see `ai/model.py`):
+- Unsloth LoRA (set MODEL_IMPL=unsloth and MODEL_PATH to your fine-tuned dir)
+- Transformers pipeline (set MODEL_IMPL=transformers and MODEL_NAME)
+- Fallback rule-based echo if no heavy libs are present
+
+Set environment variables before starting the Python service. Examples:
+
+```powershell
+$env:MODEL_IMPL = "unsloth"; $env:MODEL_PATH = "D:\\models\\klarvia_lora"
+# or
+$env:MODEL_IMPL = "transformers"; $env:MODEL_NAME = "sshleifer/tiny-gpt2"
+```
