@@ -52,8 +52,9 @@ export default function VoiceInterface() {
       });
 
       const data = await response.json();
-      setKlarviaResponse(data.reply || "Klarvia couldn’t understand that.");
-      speakResponse(data.reply);
+      const reply = data.reply || "Klarvia couldn’t understand that.";
+      setKlarviaResponse(reply);
+      speakResponse(reply);
     } catch (error) {
       console.error("Error communicating with Klarvia:", error);
       setKlarviaResponse("Error communicating with Klarvia.");
@@ -108,7 +109,7 @@ export default function VoiceInterface() {
             <Volume2 className="text-gray-500 h-6 w-6" />
           </div>
 
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 min-h-[48px] transition-all">
             {klarviaResponse
               ? klarviaResponse
               : "Waiting for your voice input..."}
